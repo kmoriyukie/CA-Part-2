@@ -1,0 +1,7 @@
+Temp/
+Artifacts/
+ShaderCache/
+PackageCache/
+
+*.meta
+

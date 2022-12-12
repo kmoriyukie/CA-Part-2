@@ -17,7 +17,6 @@ namespace PathFinding{
 	// You can add whatever you need.
 				
 		protected List<TNode> visitedNodes; // list of visited nodes 
-		
 		// protected List<NodeRecord> visitedNodes;
 		protected NodeRecord currentBest; // current best node found
 		
@@ -76,6 +75,10 @@ namespace PathFinding{
 			public int Count(){
 				return NodeQueue.Count();
 			}
+
+			public NodeRecord getItemAt(int idx){
+				return NodeQueue[idx].noderecord;
+			}
 			public NodeRecord getLowestCostNode(){
 				if(NodeQueue.Count > 0)
 					return NodeQueue[NodeQueue.Count -1].noderecord;
@@ -126,6 +129,9 @@ namespace PathFinding{
 			return visitedNodes;
 		}
 		
+		public virtual float fvalue(THeuristic h, TConnection s){
+			return s.cost + h.estimateCost(s.toNode);
+		}
 		public override List<TNode> findpath(TGraph graph, TNode start, TNode end, THeuristic heuristic, ref int found)
 		{
 			List<TNode> path = new List<TNode>();
@@ -134,7 +140,7 @@ namespace PathFinding{
 			Queue open = new Queue();
 			List<TNode> closed = new List<TNode>();
 
-			open.Add(new NodeRecord(start));
+			open.Add(new NodeRecord(start), heuristic.estimateCost(start));
 			NodeRecord current;
 			
 			float cost = 0;
@@ -148,7 +154,7 @@ namespace PathFinding{
 				visitedNodes.Add(current.node);
 				foreach (var con in graph.getConnections(current.node).connections)
 				{
-					cost = con.cost + heuristic.estimateCost(con.toNode);
+					cost = fvalue(heuristic, con);
 					if(open.Contains(con.toNode) && cost < con.cost){
 						open.Remove(con.toNode);
 					}

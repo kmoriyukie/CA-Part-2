@@ -53,10 +53,10 @@ public class NewBehaviourScript : MonoBehaviour
         GridCell start = grid.getNode(idx);
 
 
-        for(int k = 0; k < grid.getConnections(11).connections.Count; k++){
-            Debug.Log(grid.getConnections(11).connections[k].toNode.getId());
-        }
-        foreach(GridCell g in gas.findpath(grid, start, goal, new GridHeuristic(goal), ref i)){
+        // for(int k = 0; k < grid.getConnections(11).connections.Count; k++){
+        //     Debug.Log(grid.getConnections(11).connections[k].toNode.getId());
+        // }
+        foreach(GridCell g in gas.findpath(grid, start, goal, new GridHeuristic(start, goal), ref i)){
             if(g.obj.GetComponent<Renderer>() != null)
                 g.obj.GetComponent<Renderer>().material.color = new Color(0,1,0,1);
         };

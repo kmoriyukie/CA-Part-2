@@ -50,6 +50,8 @@
      <Compile Include="Assets\ToDo\Grid.cs" />
      <Compile Include="Assets\BaseCode\Heuristic.cs" />
      <Compile Include="Assets\BaseCode\Connection.cs" />
+     <Compile Include="Assets\ToDo\ARA.cs" />
+     <Compile Include="Assets\ToDo\Grid_ARA_Star.cs" />
      <None Include="Assets\SineVFX\TranslucentCrystals\Resources\Shaders\SkyboxProceduralDesaturated.shader" />
      <None Include="Assets\SineVFX\TranslucentCrystals\Readme.txt" />
      <None Include="Assets\SineVFX\TranslucentCrystals\_SRP\!!!_ReadBeforeImport_!!!.txt" />

@@ -4,16 +4,17 @@ using UnityEngine;
 using static Grid;
 using UnityEngine.Events;
 
-public class NewBehaviourScript : MonoBehaviour
+public class JumpAheadScriptGrid : MonoBehaviour
 {
     // Start is called before the first frame update
     Grid grid;
-    Grid_A_Star gas = new Grid_A_Star(100, 100, 100);
+    Grid_JumpAhead gas = new Grid_JumpAhead(100, 100, 100);
+    // Grid_A_Star gas = new Grid_A_Star(100, 100, 100);
 
     UnityEvent m_MyEvent;
     void Start()
     {
-
+        NewScene();
         if (m_MyEvent == null)
             m_MyEvent = new UnityEvent();
 
@@ -26,6 +27,7 @@ public class NewBehaviourScript : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             m_MyEvent.Invoke();
+            // if(get)'
         }
     }
 
@@ -53,9 +55,6 @@ public class NewBehaviourScript : MonoBehaviour
         GridCell start = grid.getNode(idx);
 
 
-        // for(int k = 0; k < grid.getConnections(11).connections.Count; k++){
-        //     Debug.Log(grid.getConnections(11).connections[k].toNode.getId());
-        // }
         foreach(GridCell g in gas.findpath(grid, start, goal, new GridHeuristic(start, goal), ref i)){
             if(g.obj.GetComponent<Renderer>() != null)
                 g.obj.GetComponent<Renderer>().material.color = new Color(0,1,0,1);

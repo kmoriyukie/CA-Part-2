@@ -20,9 +20,9 @@ namespace PathFinding{
 		// protected List<NodeRecord> visitedNodes;
 		protected NodeRecord currentBest; // current best node found
 		
-		protected enum NodeRecordCategory{ OPEN, CLOSED, UNVISITED };
+		public enum NodeRecordCategory{ OPEN, CLOSED, UNVISITED };
 				
-		protected class NodeRecord{	
+		public class NodeRecord{	
 		// You can use (or not) this structure to keep track of the information that we need for each node
 			
 			public NodeRecord(){}
@@ -35,11 +35,13 @@ namespace PathFinding{
 			public NodeRecordCategory category; // category of the node: open, closed or unvisited
 			public int depth; // depth in the search graph
 
+			public bool isForced;
+
 		};
 
 		protected class Queue{
 
-			protected class QueueItem{
+			public class QueueItem{
 				public QueueItem(){}
 				public QueueItem(NodeRecord node, float p){noderecord = node; priority = p;}
 				public QueueItem(NodeRecord node, float p, NodeRecord parent){
@@ -52,7 +54,7 @@ namespace PathFinding{
 				public float priority;
 			};
 
-			protected List<QueueItem> NodeQueue;
+			public List<QueueItem> NodeQueue;
 			
 			public Queue(){ NodeQueue = new List<QueueItem>();}
 
@@ -86,6 +88,7 @@ namespace PathFinding{
 					return null;
 			}
 			
+
 			public bool Contains(TNode n){
 				foreach (QueueItem item in NodeQueue)
 				{
@@ -113,21 +116,18 @@ namespace PathFinding{
 				}
 			}
 
-			public NodeRecord GetNodeRecordAt(int index){
-				return NodeQueue[index].noderecord;
+			public void Clear(){
+				NodeQueue.Clear();
 			}
 		};
 
 
 		public	A_Star(int maxNodes, float maxTime, int maxDepth):base(){ 
-			
 			visitedNodes = new List<TNode> ();
 			
 		}
 
-		public virtual List<TNode> getVisitedNodes(){
-			return visitedNodes;
-		}
+
 		
 		public virtual float fvalue(THeuristic h, TConnection s){
 			return s.cost + h.estimateCost(s.toNode);
@@ -154,6 +154,7 @@ namespace PathFinding{
 				visitedNodes.Add(current.node);
 				foreach (var con in graph.getConnections(current.node).connections)
 				{
+					if(con == null) continue;
 					cost = fvalue(heuristic, con);
 					if(open.Contains(con.toNode) && cost < con.cost){
 						open.Remove(con.toNode);

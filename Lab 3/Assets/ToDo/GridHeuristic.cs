@@ -10,6 +10,8 @@ public class GridHeuristic : Heuristic<GridCell>
 	// one GridCell to another
 
 	// constructor takes a goal node for estimating
+
+	List<slime> agentList;
 	public GridHeuristic(GridCell goal):base(goal){
 		// goalNode = goal;
 	}
@@ -17,13 +19,26 @@ public class GridHeuristic : Heuristic<GridCell>
 	public GridHeuristic(GridCell start, GridCell goal):base(start, goal){
 	}
 	
+
+	public GridHeuristic(GridCell goal, List<slime> lst):base(goal){
+		agentList = lst;
+	}
 	public void setStart(GridCell start){
 		startNode = start;
 	}
 	 // generates an estimated cost to reach the stored goal from the given node
 	public override float estimateCost(GridCell fromNode){
-		return (goalNode.getPosition() - fromNode.getPosition()).magnitude;
-		// return 0;// TO IMPLEMENT
+		if(agentList != null){
+			int aux = 1;
+			foreach (var item in agentList)
+			{
+				if(item.pathm.path.Contains(fromNode)) 
+					aux*=20;
+			}
+			return aux * (goalNode.getPosition() - fromNode.getPosition()).magnitude;
+			// increased cost if other agents in cell
+		}
+		else return(goalNode.getPosition() - fromNode.getPosition()).magnitude;
 	}
 
 	public override float costFromStart(GridCell toNode){

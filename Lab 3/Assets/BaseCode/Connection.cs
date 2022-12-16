@@ -19,6 +19,7 @@ namespace PathFinding{
 
 		public float cost; // the cost of using that connection in a path 
 
+
 		public Connection(TNode from, TNode to){
 			fromNode = from; 
 			toNode = to; 

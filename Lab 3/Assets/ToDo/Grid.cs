@@ -53,47 +53,78 @@ public class Grid : FiniteGraph<GridCell, CellConnection, GridConnections>
 			{
 				nodes.Add(new GridCell(i, j, numRows, numColumns, cellSize, height, i < 8 && j == 2, true));
 				connections.Add(new GridConnections());
+
+				for(int k = 0; k < 8; k++){ // guarantee always 8 neighbors, even if empty / obstacle
+					connections[i * numColumns + j].Add(null);
+				}
 			}
 		}
 		int idx;
-
+/*
+Neighbor order!
+1 8 7
+2   6
+3 4 5
+*/
 		for(int i = 0; i < numR; i++){
 			for (int j = 0; j < numC; j++)
 			{
 				idx = i * numColumns + j;
 				if(i > 0){
-					CheckAddConnection(idx, (i - 1)*numColumns + j);
-					if(j > 0){
-						CheckAddConnection(idx, (i - 1)*numColumns + (j - 1));
-					}
-					if(j < numC - 1){
-						CheckAddConnection(idx, (i - 1)*numColumns + (j + 1));
-					}
+					if(j < numC - 1) CheckAddConnection(idx, (i - 1)*numColumns + (j + 1), 0);
+					if(j > 0) CheckAddConnection(idx, (i - 1)*numColumns + (j - 1), 1);
+
+					CheckAddConnection(idx, (i - 1)*numColumns + j, 2);
 				}
-				if(j > 0){
-					CheckAddConnection(idx, i*numColumns + j - 1);
-				}
+
+				if(j > 0) CheckAddConnection(idx, i*numColumns + j - 1, 3);
+				// else connections[idx].Add(null);
+				
 				if(i < numR - 1){
-					CheckAddConnection(idx, (i + 1)*numColumns + j);
-					if(j > 0){
-						CheckAddConnection(idx, (i + 1)*numColumns + (j - 1));
-					}
-					if(j < numC - 1){
-						CheckAddConnection(idx, (i + 1)*numColumns + j + 1);
-					}
+					if(j > 0) CheckAddConnection(idx, (i + 1)*numColumns + (j - 1), 4);
+					// else connections[idx].Add(null);
+
+					CheckAddConnection(idx, (i + 1)*numColumns + j, 5);
+
+					if(j < numC - 1) CheckAddConnection(idx, (i + 1)*numColumns + j + 1, 6);
+					// else connections[idx].Add(null);
 				}
-				if(j < numC - 1){
-					CheckAddConnection(idx, i*numColumns + j + 1);
-				}
+				// else connections[idx].Add(null);
+
+				if(j < numC - 1) CheckAddConnection(idx, i*numColumns + j + 1, 7);
+				// else connections[idx].Add(null);
 			}
 		}
 
 	}
 	
-	void CheckAddConnection(int idx, int idx2){
+	void CheckAddConnection(int idx, int idx2, int direction){
 		if(!nodes[idx2].isOccupied()){
-			connections[idx].Add(new CellConnection(nodes[idx], nodes[idx2]));
+			connections[idx].SetElementAt(direction, new CellConnection(nodes[idx], nodes[idx2]));
 		}
+		// else connections[idx].Add(null);
+	}
+
+	// public GridCell getCellFromPosition(Vector3 pos){
+	// 	double dist = 10000;
+	// 	GridCell aux;
+	// 	foreach (var item in nodes)
+	// 	{
+	// 		if((item.getPosition() - pos).magnitude < dist) {
+	// 			dist = (item.getPosition() - pos).magnitude;
+	// 			aux = 
+	// 		}
+	// 	}
+	// }
+
+	public int getColumns(){
+		return numColumns;
+	}
+	public int getRows(){
+		return numRows;
+	}
+	public float getCellSize(){
+		return sizeOfCell;
 	}
 	
 };

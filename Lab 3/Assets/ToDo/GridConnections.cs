@@ -9,4 +9,5 @@ public class GridConnections : NodeConnections<GridCell, CellConnection>
 	// Class to handle a list of CellConnections
 	
 	// NOTHING TO DO HERE
+
 };

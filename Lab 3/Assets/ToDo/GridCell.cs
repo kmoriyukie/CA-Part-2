@@ -63,7 +63,6 @@ public class GridCell : Node
 		if(occupied){
 			GameObject o = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SineVFX/TranslucentCrystals/Prefabs/Crystalsv06.prefab");
 			obj = GameObject.Instantiate((GameObject)o, center, Quaternion.identity);
-			// obj.transform.localScale = new Vector3(cellSize, height, cellSize);
 		}
 		else{
 			obj = GameObject.CreatePrimitive(PrimitiveType.Cube);

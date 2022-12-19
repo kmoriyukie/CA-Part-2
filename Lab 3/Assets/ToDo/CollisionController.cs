@@ -25,11 +25,7 @@ public class CollisionController : MonoBehaviour
     {
         int mult = 1;
         if(parent!=null){
-            if(collision.GetContact(0).Equals(prev))
-                mult = 2;
             parent.prefab.transform.position += mult *(parent.prefab.transform.position - collision.GetContact(0).point).normalized* parent.maxSpeed * Time.deltaTime;
-            prev = collision.GetContact(0);
-            
         }
     }
 }

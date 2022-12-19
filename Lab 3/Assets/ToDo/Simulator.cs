@@ -62,7 +62,7 @@ public class PathManager{
 
         path = gas.findpath(grid, parent.currentCell, goalCell, heuristic, ref i);
         
-        if(renderPath == true){
+        if(renderPath == true && path.Count > 0){
             path[path.Count -1].obj.GetComponent<Renderer>().material.color = new Color(1,0,0, 1);
             foreach(GridCell gr in path){
                 if(gr.obj.GetComponent<Renderer>() != null)
@@ -139,11 +139,16 @@ public class Simulator : MonoBehaviour
             foreach(GridCell node in grid.nodes){
                 if(node.obj != null)
                     Destroy(node.obj);
+                if(node.obj2 != null)
+                    Destroy(node.obj2);
             }
             foreach(Agent s in Agentlist){
                 Destroy(s.prefab.gameObject);
+                Destroy(s.colliderObject.gameObject);
+                
             }
             Agentlist.Clear();
+            grid.nodes.Clear();
         }
     }
     void NewScene(){

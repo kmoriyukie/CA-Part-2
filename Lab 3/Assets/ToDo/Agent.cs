@@ -22,8 +22,6 @@ public class Agent{
     public GridHeuristic heuristic;
 
     public List<Agent> agentList;
-
-    public GameObject script;
     public void setPath(Grid grid, bool highlight){
         path = new PathManager_Lab4(this, grid, highlight);
     }

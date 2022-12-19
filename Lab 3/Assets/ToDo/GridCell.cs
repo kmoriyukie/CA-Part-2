@@ -68,17 +68,19 @@ public class GridCell : Node
 			
 			obj.transform.localScale = new Vector3(3.5f,2f,3.5f);
 			obj.transform.position = center;
-			obj.transform.position += new Vector3(0, 0.5f, 0);  
+
 			obj2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			obj2.transform.localScale = new Vector3(cellSize, height, cellSize);
 			obj2.transform.position = center;  
 			obj2.GetComponent<Renderer>().material.color = new Color(0,0,0, 1);
-			
 		}
 		else{
 			obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			obj.transform.localScale = new Vector3(cellSize, height, cellSize);
 			obj.transform.position = center;  
+			obj.GetComponent<Renderer>().material.color = new Color(1,1,1, 1);
+
+			obj2 = null;
 		}
 	}
 

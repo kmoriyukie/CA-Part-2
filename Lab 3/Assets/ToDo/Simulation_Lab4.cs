@@ -92,11 +92,16 @@ public class Simulation_Lab4 : MonoBehaviour
             foreach(GridCell node in grid.nodes){
                 if(node.obj != null)
                     Destroy(node.obj);
+                if(node.obj2 != null)
+                    Destroy(node.obj2);
             }
             foreach(Agent s in Agentlist){
                 Destroy(s.prefab.gameObject);
+                Destroy(s.colliderObject.gameObject);
+                
             }
             Agentlist.Clear();
+            grid.nodes.Clear();
         }
     }
     void NewScene(){

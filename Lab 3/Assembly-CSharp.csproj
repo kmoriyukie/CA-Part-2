@@ -85,6 +85,7 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
+     <Compile Include="Assets\ToDo\CollisionController.cs" />
      <Compile Include="Assets\BaseCode\Heuristic.cs" />
      <Compile Include="Assets\ToDo\ARA.cs" />
      <Compile Include="Assets\Kawaii Slimes\Scripts\AI\EnemyAi.cs" />
@@ -96,7 +97,6 @@
      <Compile Include="Assets\ToDo\Agent.cs" />
      <Compile Include="Assets\BaseCode\Connection.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
-     <Compile Include="Assets\CollisionController.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\SineVFX\TranslucentCrystals\Resources\Shaders\SkyboxProceduralDesaturated.shader" />

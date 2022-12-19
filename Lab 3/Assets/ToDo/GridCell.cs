@@ -23,6 +23,8 @@ public class GridCell : Node
 	protected Vector3 center;
 
 	public GameObject obj;
+	public GameObject obj2;
+	
 
 	public GridCell(int i):base(i) {
 		xMin = i - Width/2;
@@ -63,6 +65,15 @@ public class GridCell : Node
 		if(occupied){
 			GameObject o = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/SineVFX/TranslucentCrystals/Prefabs/Crystalsv06.prefab");
 			obj = GameObject.Instantiate((GameObject)o, center, Quaternion.identity);
+			
+			obj.transform.localScale = new Vector3(3.5f,2f,3.5f);
+			obj.transform.position = center;
+			obj.transform.position += new Vector3(0, 0.5f, 0);  
+			obj2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			obj2.transform.localScale = new Vector3(cellSize, height, cellSize);
+			obj2.transform.position = center;  
+			obj2.GetComponent<Renderer>().material.color = new Color(0,0,0, 1);
+			
 		}
 		else{
 			obj = GameObject.CreatePrimitive(PrimitiveType.Cube);

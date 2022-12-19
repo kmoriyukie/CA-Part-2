@@ -104,19 +104,6 @@ Neighbor order!
 		}
 		// else connections[idx].Add(null);
 	}
-
-	// public GridCell getCellFromPosition(Vector3 pos){
-	// 	double dist = 10000;
-	// 	GridCell aux;
-	// 	foreach (var item in nodes)
-	// 	{
-	// 		if((item.getPosition() - pos).magnitude < dist) {
-	// 			dist = (item.getPosition() - pos).magnitude;
-	// 			aux = 
-	// 		}
-	// 	}
-	// }
-
 	public int getColumns(){
 		return numColumns;
 	}

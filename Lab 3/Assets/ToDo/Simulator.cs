@@ -1,8 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.Events;
+
+
 public class Globals{
     public int xMin = 0;
     public int xMax = 10;
@@ -26,35 +26,35 @@ public class Globals{
         return g.getNode(x * g.getColumns() + z);
     }
 
+    public float min(float a, float b){
+        if(a < b) return a;
+        return b;
+    }
     public Globals(){}
 
 }
 
 
 public class PathManager{
-    Globals globals = new Globals();
-    // public Vector3 goal;
+    public Globals globals = new Globals();
     public GridCell goalCell;
-    slime parent;
+    public Agent parent;
     
-    // Vector3 goal;
-    Grid grid;
-    Grid_JumpAhead gas = new Grid_JumpAhead(100, 100, 100);
+    public Grid grid;
+    public Grid_JumpAhead gas = new Grid_JumpAhead(100, 100, 100);
 
     public List<GridCell> path;
-    // Arrow arrow;
 
-    bool renderPath = false;
+    public bool renderPath = false;
 
-    GridHeuristic heuristic;
-    public PathManager(slime p = null, Grid g = null, bool highlight = false){
+    public GridHeuristic heuristic;
+    public PathManager(Agent p, Grid g = null, bool singleAgent = false){
         grid = g;
         parent = p;
-        renderPath = highlight;
-        newPath();
+        renderPath = singleAgent;
     }
     
-    void newPath(){
+    public void newPath(){
         int i = 0;
         
         do goalCell = globals.randomCell(grid); while (goalCell.isOccupied());
@@ -72,7 +72,11 @@ public class PathManager{
         }
     }
 
-    public void update(){
+    public virtual void update(){
+        if(path == null){
+            newPath();
+            return;
+        }
         if(parent.currentCell != goalCell && path.Count != 0) {
             GridCell nextStep = path[path.Count -1];
             parent.transform.position += (nextStep.getPosition() - parent.transform.position).normalized * Time.deltaTime * parent.maxSpeed;;
@@ -82,106 +86,23 @@ public class PathManager{
                 parent.currentCell = nextStep;
                 path.Remove(path[path.Count -1]); 
             }
-            
-            // parent.transform.forward =  (nextStep.getPosition() - parent.transform.position).normalized;
-            parent.transform.forward = Vector3.Lerp(nextStep.getPosition().normalized, parent.transform.position, 2*Time.deltaTime).normalized;
-                
+            Vector3 aux = nextStep.getPosition();
+            aux.y = 1.5f;
+            parent.transform.LookAt(aux, new Vector3(0,1,0));
         }
         else{
             newPath();
-            // parent.transform.forward = (goalCell.getPosition() - parent.transform.position).normalized;
-            // parent.transform.forward = Vector3.Lerp(parent.transform.forward,goalCell.getPosition().normalized, Time.deltaTime*50);
         }
     }
 }
 
 
-public class slime{
-    // Object obj;
-    public GameObject prefab;
-    public float maxSpeed = Random.Range(5, 15)/5f;
-    Vector3 maxVelocity = new Vector3(1,0,1);
-    string[] filenames = {"Slime_01", "Slime_01_King", "Slime_01_MeltalHelmet", "Slime_01_Viking", 
-                          "Slime_02", 
-                          "Slime_03", "Slime_03 King", "Slime_03 Leaf", "Slime_03 Sprout"};
 
-    public string name;
-    public Transform transform;
-    
-    public PathManager pathm;
-
-    public GridCell currentCell;
-
-    public GridHeuristic heuristic;
-
-    public List<slime> agentList;
-    public slime(Grid grid, List<slime> lsta = null){
-        int r = Random.Range(0,8);
-
-        agentList = lsta;
-
-        List<Object> lst = loadprefabs();
-        name = filenames[r];
-        pathm = new PathManager(this, grid);
-        currentCell = grid.getNode(0);
-
-        prefab = GameObject.Instantiate((GameObject)lst[r], 
-                                        currentCell.getPosition(),
-                                        Quaternion.identity);   
-                                        
-        transform = prefab.GetComponent<Transform>();
-        prefab.AddComponent<Rigidbody>();
-
-    } 
-    public slime(Vector3 v, Quaternion q, Grid grid, bool highlight = false, List<slime> lsta = null){
-        int r = Random.Range(0,8);
-
-        agentList = lsta;
-        
-        List<Object> lst = loadprefabs();
-        name = filenames[r];
-
-        currentCell = grid.getNode(((int)v.x) * grid.getColumns() + ((int)v.z));
-        Debug.Log(currentCell.getPosition());
-        Vector3 pos = currentCell.getPosition();
-        pos.y = 1.0f;
-        pathm = new PathManager(this, grid, highlight);
-
-        prefab = GameObject.Instantiate((GameObject)lst[r], pos, q);
-        
-        transform = prefab.GetComponent<Transform>();
-        transform.localScale = new Vector3(10, 10, 10);
-        
-        prefab.AddComponent<Rigidbody>();
-
-        prefab.AddComponent<SphereCollider>();
-        prefab.GetComponent<SphereCollider>().radius = 0.35f;
-        prefab.GetComponent<SphereCollider>().center = new Vector3(0, 0.35f, 0);
-        
-        prefab.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Extrapolate;
-        prefab.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
-    } 
-
-    public List<Object> loadprefabs(){
-        List<Object> lst = new List<Object>();
-        Object o;
-        foreach(string s in filenames){
-            o = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Kawaii Slimes/Prefabs/" + s + ".prefab");
-            lst.Add(o);
-        }
-        return lst;
-    }  
-
-    public void update(){
-        pathm.update();
-    }
-
-}
 
 public class Simulator : MonoBehaviour
 {
     // Start is called before the first frame update
-    List<slime> slimelist = new List<slime>();
+    List<Agent> Agentlist = new List<Agent>();
     List<Vector3> initialPositionList = new List<Vector3>();
 
     Grid grid;
@@ -206,12 +127,11 @@ public class Simulator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach(slime s in slimelist) s.update();
+        foreach(Agent s in Agentlist) s.update();
 
         if (Input.GetKey(KeyCode.Space))
         {
             m_MyEvent.Invoke();
-            // if(get)'
         }
     }
     void destroy(){
@@ -220,15 +140,15 @@ public class Simulator : MonoBehaviour
                 if(node.obj != null)
                     Destroy(node.obj);
             }
-            foreach(slime s in slimelist){
+            foreach(Agent s in Agentlist){
                 Destroy(s.prefab.gameObject);
             }
-            slimelist.Clear();
+            Agentlist.Clear();
         }
     }
     void NewScene(){
         destroy();
-        grid = new Grid(0, 10, 0, 10, 10, 1);
+        grid = new Grid(0, 20, 0, 10, 10, 1);
         if(!multipleIndividuals) addAgent(true);
         else{
             for(int i = 0; i < 10; i++){
@@ -236,22 +156,25 @@ public class Simulator : MonoBehaviour
             }
         }
     }
-    void addAgent(bool highlight = false){
-        Vector3 slimepos = global.randomPosition();
-        while(grid.getNode(((int)slimepos.x) * grid.getColumns() + ((int)slimepos.z)).isOccupied())
-            slimepos = global.randomPosition();
-        slime s;
-        if(!highlight) s = new slime(slimepos, randomRotation(), grid, highlight, slimelist); // only takes into account other agents if they exist!
-        else s = new slime(slimepos, randomRotation(), grid, highlight);
-        slimelist.Add(s);
+
+    
+
+    void addAgent(bool singleAgent = false){
+        Vector3 Agentpos = global.randomPosition();
+        while(grid.getNode(((int)Agentpos.x) * grid.getColumns() + ((int)Agentpos.z)).isOccupied())
+            Agentpos = global.randomPosition();
+        Agent s;
+        if(!singleAgent) s = new Agent(Agentpos, randomRotation(), grid, singleAgent, Agentlist); // only takes into account other agents if they exist!
+        else s = new Agent(Agentpos, randomRotation(), grid, singleAgent);
+        Agentlist.Add(s);
     }
     void removeAgent(string name){
-        foreach(slime s in slimelist){
-            if(s.name == name) slimelist.Remove(s);
+        foreach(Agent s in Agentlist){
+            if(s.name == name) Agentlist.Remove(s);
         }
     }
     bool checkIfPositionOccupied(Vector3 v){
-        foreach(slime s in slimelist){
+        foreach(Agent s in Agentlist){
             if((s.transform.position - v).magnitude < 0.8) return true;
         }
         return false;
